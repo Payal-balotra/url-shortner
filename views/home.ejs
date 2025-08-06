@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener - Home</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .content {
+        padding: 2rem;
+      }
+
+      .url-form {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 600;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e5e9;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .shortened-url {
+        background: #e8f5e8;
+        border: 1px solid #4caf50;
+        color: #2e7d32;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .urls-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .urls-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      .urls-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #e1e5e9;
+      }
+
+      .urls-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .urls-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .short-id {
+        font-family: 'Courier New', monospace;
+        background: #f0f0f0;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #333;
+      }
+
+      .redirect-url {
+        color: #667eea;
+        text-decoration: none;
+        word-break: break-all;
+      }
+
+      .redirect-url:hover {
+        text-decoration: underline;
+      }
+
+      .clicks {
+        text-align: center;
+        font-weight: 600;
+        color: #28a745;
+      }
+
+      .no-urls {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
+        font-style: italic;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+        
+        .header h1 {
+          font-size: 2rem;
+        }
+        
+        .urls-table {
+          font-size: 14px;
+        }
+        
+        .urls-table th,
+        .urls-table td {
+          padding: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>URL Shortener</h1>
+       
+      </div>
+      
+      <div class="content">
+        <div class="url-form">
+          <form method="post" action="/url">
+            <div class="form-group">
+              <label>Enter the URL</label>
+              <input
+                type="text"
+                name="url"
+                placeholder="https://example.com"
+                required
+              />
+            </div>
+            <button type="submit">Generate Short URL</button>
+          </form>
+
+          <% if (id) { %>
+            <div class="shortened-url">
+              <strong>Shortened URL:</strong> http://localhost:8000/<%= id %>
+            </div>
+          <% } %>
+        </div>
+
+        <div>
+          <% if (urls && urls.length > 0) { %>
+            <h2 style="margin-bottom: 1rem; color: #333;">Your URLs</h2>
+            <table class="urls-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Short ID</th>
+                  <th>Original URL</th>
+                  <th>Clicks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% urls.forEach((url, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><span class="short-id"><%= url.shortId %></span></td>
+                    <td>
+                      <a href="<%= url.redirectUrl %>" class="redirect-url" target="_blank">
+                        <%= url.redirectUrl %>
+                      </a>
+                    </td>
+                    <td class="clicks"><%= url.visitHistory.length %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <div class="no-urls">
+              <p>No URLs created yet. Create your first short URL above!</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
